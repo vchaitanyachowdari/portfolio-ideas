@@ -9,6 +9,8 @@ import Footer from "@/components/footer"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function ContributionGuidelinesPage() {
+  // Remove the experimental useEffectEvent import
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-purple-950 text-white">
       <Header />
