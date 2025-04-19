@@ -2,9 +2,9 @@
 export const mockPortfolios = [
   {
     id: 1,
-    author: "Sarah Johnson",
+    author: "Victor Eke",
     screenshot: "/placeholder.svg?height=400&width=600",
-    liveUrl: "https://example.com/portfolio1",
+    liveUrl: "https://victoreke.com/",
     githubUrl: "https://github.com/example/portfolio1",
     techStack: ["React", "TailwindCSS", "Framer Motion", "Next.js"],
     description: "A minimalist portfolio with smooth animations and a focus on typography and whitespace.",
