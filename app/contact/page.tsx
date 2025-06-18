@@ -1,10 +1,10 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { motion } from "framer-motion"
-import { Mail, Phone, MapPin, Send, AlertCircle } from "lucide-react"
+import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle, Loader2 } from "lucide-react"
+import emailjs from "@emailjs/browser"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Input } from "@/components/ui/input"
@@ -13,50 +13,163 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
+// EmailJS configuration - Replace with your actual values
+const EMAILJS_SERVICE_ID = "your_service_id"
+const EMAILJS_TEMPLATE_ID = "your_template_id"
+const EMAILJS_PUBLIC_KEY = "your_public_key"
+
+interface FormData {
+  name: string
+  email: string
+  subject: string
+  message: string
+}
+
+interface FormErrors {
+  name?: string
+  email?: string
+  subject?: string
+  message?: string
+}
+
 export default function ContactPage() {
-  const [formState, setFormState] = useState({
+  const formRef = useRef<HTMLFormElement>(null)
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     subject: "",
     message: "",
   })
 
+  const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [submitMessage, setSubmitMessage] = useState("")
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {}
+
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = "Name is required"
+    } else if (formData.name.trim().length < 2) {
+      errors.name = "Name must be at least 2 characters long"
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      errors.email = "Email is required"
+    } else if (!emailRegex.test(formData.email)) {
+      errors.email = "Please enter a valid email address"
+    }
+
+    // Subject validation
+    if (!formData.subject) {
+      errors.subject = "Please select a subject"
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      errors.message = "Message is required"
+    } else if (formData.message.trim().length < 10) {
+      errors.message = "Message must be at least 10 characters long"
+    }
+
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    })
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+
+    // Clear error for this field when user starts typing
+    if (formErrors[name as keyof FormErrors]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }))
+    }
   }
 
   const handleSelectChange = (value: string) => {
-    setFormState({
-      ...formState,
+    setFormData((prev) => ({
+      ...prev,
       subject: value,
-    })
+    }))
+
+    // Clear subject error when user selects
+    if (formErrors.subject) {
+      setFormErrors((prev) => ({
+        ...prev,
+        subject: undefined,
+      }))
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validate form
+    if (!validateForm()) {
+      return
+    }
+
     setFormStatus("submitting")
+    setSubmitMessage("")
 
-    // Simulate form submission
-    setTimeout(() => {
-      // For demo purposes, we'll just show success
-      setFormStatus("success")
-      setFormState({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      })
+    try {
+      // Initialize EmailJS (you only need to do this once in your app)
+      emailjs.init(EMAILJS_PUBLIC_KEY)
 
-      // Reset form status after 5 seconds
+      // Prepare template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: "your-email@example.com", // Replace with your email
+      }
+
+      // Send email using EmailJS
+      const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+
+      if (response.status === 200) {
+        setFormStatus("success")
+        setSubmitMessage("Thank you for your message! We'll get back to you soon.")
+
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
+
+        // Reset form status after 5 seconds
+        setTimeout(() => {
+          setFormStatus("idle")
+          setSubmitMessage("")
+        }, 5000)
+      } else {
+        throw new Error("Failed to send email")
+      }
+    } catch (error) {
+      console.error("EmailJS Error:", error)
+      setFormStatus("error")
+      setSubmitMessage("Sorry, there was an error sending your message. Please try again or contact us directly.")
+
+      // Reset error status after 5 seconds
       setTimeout(() => {
         setFormStatus("idle")
+        setSubmitMessage("")
       }, 5000)
-    }, 1500)
+    }
   }
 
   return (
@@ -149,6 +262,30 @@ export default function ContactPage() {
                     <SocialButton label="LinkedIn" href="https://linkedin.com" />
                   </div>
                 </div>
+
+                {/* Setup Instructions */}
+                <div className="mt-12 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                  <h3 className="text-lg font-semibold mb-3 text-yellow-400">📧 EmailJS Setup Required</h3>
+                  <div className="text-sm text-gray-300 space-y-2">
+                    <p>To enable email functionality, please:</p>
+                    <ol className="list-decimal list-inside space-y-1 ml-4">
+                      <li>
+                        Create an account at{" "}
+                        <a
+                          href="https://emailjs.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-400 hover:underline"
+                        >
+                          emailjs.com
+                        </a>
+                      </li>
+                      <li>Set up an email service (Gmail, Outlook, etc.)</li>
+                      <li>Create an email template</li>
+                      <li>Replace the configuration values in the code</li>
+                    </ol>
+                  </div>
+                </div>
               </motion.div>
 
               {/* Contact Form */}
@@ -161,62 +298,89 @@ export default function ContactPage() {
               >
                 <h2 className="text-2xl font-bold mb-6">Send us a message</h2>
 
+                {/* Success Alert */}
                 {formStatus === "success" && (
                   <Alert className="mb-6 bg-green-500/20 border-green-500/50 text-white">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Your message has been sent successfully! We'll get back to you soon.
-                    </AlertDescription>
+                    <CheckCircle className="h-4 w-4" />
+                    <AlertDescription>{submitMessage}</AlertDescription>
                   </Alert>
                 )}
 
+                {/* Error Alert */}
                 {formStatus === "error" && (
                   <Alert className="mb-6 bg-red-500/20 border-red-500/50 text-white">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>There was an error sending your message. Please try again.</AlertDescription>
+                    <AlertDescription>{submitMessage}</AlertDescription>
                   </Alert>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Name Field */}
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
-                        Your Name
+                        Your Name <span className="text-red-400">*</span>
                       </label>
                       <Input
                         id="name"
                         name="name"
-                        value={formState.name}
+                        value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
                         required
-                        className="bg-white/5 border-white/10"
+                        className={`bg-white/5 border-white/10 ${
+                          formErrors.name ? "border-red-500 focus-visible:ring-red-500" : ""
+                        }`}
+                        aria-invalid={!!formErrors.name}
+                        aria-describedby={formErrors.name ? "name-error" : undefined}
                       />
+                      {formErrors.name && (
+                        <p id="name-error" className="text-sm text-red-400 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {formErrors.name}
+                        </p>
+                      )}
                     </div>
 
+                    {/* Email Field */}
                     <div className="space-y-2">
                       <label htmlFor="email" className="text-sm font-medium">
-                        Your Email
+                        Your Email <span className="text-red-400">*</span>
                       </label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
-                        value={formState.email}
+                        value={formData.email}
                         onChange={handleChange}
                         placeholder="john@example.com"
                         required
-                        className="bg-white/5 border-white/10"
+                        className={`bg-white/5 border-white/10 ${
+                          formErrors.email ? "border-red-500 focus-visible:ring-red-500" : ""
+                        }`}
+                        aria-invalid={!!formErrors.email}
+                        aria-describedby={formErrors.email ? "email-error" : undefined}
                       />
+                      {formErrors.email && (
+                        <p id="email-error" className="text-sm text-red-400 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {formErrors.email}
+                        </p>
+                      )}
                     </div>
                   </div>
 
+                  {/* Subject Field */}
                   <div className="space-y-2">
                     <label htmlFor="subject" className="text-sm font-medium">
-                      Subject
+                      Subject <span className="text-red-400">*</span>
                     </label>
-                    <Select value={formState.subject} onValueChange={handleSelectChange}>
-                      <SelectTrigger className="bg-white/5 border-white/10">
+                    <Select value={formData.subject} onValueChange={handleSelectChange} required>
+                      <SelectTrigger
+                        className={`bg-white/5 border-white/10 ${formErrors.subject ? "border-red-500" : ""}`}
+                        aria-invalid={!!formErrors.subject}
+                        aria-describedby={formErrors.subject ? "subject-error" : undefined}
+                      >
                         <SelectValue placeholder="Select a subject" />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-800 border-white/10">
@@ -224,54 +388,59 @@ export default function ContactPage() {
                         <SelectItem value="support">Technical Support</SelectItem>
                         <SelectItem value="contribute">Portfolio Submission</SelectItem>
                         <SelectItem value="feedback">Feedback</SelectItem>
+                        <SelectItem value="partnership">Partnership</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formErrors.subject && (
+                      <p id="subject-error" className="text-sm text-red-400 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {formErrors.subject}
+                      </p>
+                    )}
                   </div>
 
+                  {/* Message Field */}
                   <div className="space-y-2">
                     <label htmlFor="message" className="text-sm font-medium">
-                      Your Message
+                      Your Message <span className="text-red-400">*</span>
                     </label>
                     <Textarea
                       id="message"
                       name="message"
-                      value={formState.message}
+                      value={formData.message}
                       onChange={handleChange}
-                      placeholder="How can we help you?"
+                      placeholder="How can we help you? Please provide as much detail as possible..."
                       required
-                      className="min-h-[150px] bg-white/5 border-white/10"
+                      className={`min-h-[150px] bg-white/5 border-white/10 resize-none ${
+                        formErrors.message ? "border-red-500 focus-visible:ring-red-500" : ""
+                      }`}
+                      aria-invalid={!!formErrors.message}
+                      aria-describedby={formErrors.message ? "message-error" : undefined}
                     />
+                    <div className="flex justify-between items-center">
+                      {formErrors.message ? (
+                        <p id="message-error" className="text-sm text-red-400 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {formErrors.message}
+                        </p>
+                      ) : (
+                        <div />
+                      )}
+                      <span className="text-xs text-gray-400">{formData.message.length}/1000</span>
+                    </div>
                   </div>
 
+                  {/* Submit Button */}
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={formStatus === "submitting"}
                   >
                     {formStatus === "submitting" ? (
-                      <span className="flex items-center">
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Sending...
+                      <span className="flex items-center justify-center">
+                        <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5" />
+                        Sending Message...
                       </span>
                     ) : (
                       <span className="flex items-center justify-center">
@@ -279,6 +448,19 @@ export default function ContactPage() {
                       </span>
                     )}
                   </Button>
+
+                  {/* Form Info */}
+                  <p className="text-xs text-gray-400 text-center">
+                    By submitting this form, you agree to our{" "}
+                    <a href="/privacy-policy" className="text-purple-400 hover:underline">
+                      Privacy Policy
+                    </a>{" "}
+                    and{" "}
+                    <a href="/terms-of-service" className="text-purple-400 hover:underline">
+                      Terms of Service
+                    </a>
+                    .
+                  </p>
                 </form>
               </motion.div>
             </div>
@@ -322,6 +504,14 @@ export default function ContactPage() {
               <FaqItem
                 question="Can I filter portfolios by specific technologies?"
                 answer="Yes, on our Portfolio Table page, you can filter by various technologies including React, Vue, Angular, and more to find inspiration relevant to your tech stack."
+              />
+              <FaqItem
+                question="How long does it take to get a response?"
+                answer="We typically respond to all inquiries within 24-48 hours during business days. For urgent matters, please mention it in your message."
+              />
+              <FaqItem
+                question="Can I contribute code to the project?"
+                answer="We welcome contributions. Please check our Contribution Guidelines page for detailed instructions on how to contribute."
               />
             </div>
           </div>
