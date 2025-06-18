@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { Shield, Clock, Users, FileText } from "lucide-react"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-// Remove any useEffectEvent imports
 
 export default function PrivacyPolicyPage() {
   return (

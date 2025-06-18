@@ -10,7 +10,6 @@ import Footer from "@/components/footer"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// Remove any useEffectEvent imports
 
 export default function DocumentationPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -330,12 +329,7 @@ function DocSection({
   title,
   icon,
   children,
-}: {
-  id: string
-  title: string
-  icon: React.ReactNode
-  children: React.ReactNode
-}) {
+}: { id: string; title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <motion.section
       id={id}
