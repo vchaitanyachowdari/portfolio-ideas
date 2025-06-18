@@ -1,8 +1,8 @@
 # Portfolio Ideas 💜
 
-A curated collection of 130+ stunning developer and designer portfolios to inspire your next project.
+<img width="1470" alt="Screenshot 2025-06-18 at 11 26 31 AM" src="https://github.com/user-attachments/assets/cea62459-3a72-4443-9778-af30a795d9f7" />
 
-![Portfolio Ideas Hero](https://via.placeholder.com/1200x600/1e293b/a855f7?text=Portfolio+Ideas)
+A curated collection of 130+ stunning developer and designer portfolios to inspire your next project.
 
 ## 🌟 Features
 
