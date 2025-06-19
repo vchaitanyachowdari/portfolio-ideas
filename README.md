@@ -23,30 +23,30 @@ A curated collection of 130+ stunning developer and designer portfolios to inspi
 ### Installation
 
 1. Clone the repository:
-\`\`\`bash
+```bash
 git clone https://github.com/your-username/portfolio-ideas.git
 cd portfolio-ideas
-\`\`\`
+```
 
 2. Install dependencies:
-\`\`\`bash
+```bash
 npm install
 # or
 yarn install
-\`\`\`
+```
 
 3. Run the development server:
-\`\`\`bash
+```bash
 npm run dev
 # or
 yarn dev
-\`\`\`
+```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🏗️ Project Structure
 
-\`\`\`
+```
 portfolio-ideas/
 ├── app/                          # Next.js App Router pages
 │   ├── about/                    # About page
@@ -72,7 +72,7 @@ portfolio-ideas/
 │   └── utils.ts                # Utility functions
 ├── public/                      # Static assets
 └── tailwind.config.ts          # Tailwind CSS configuration
-\`\`\`
+```
 
 ## 🎨 Tech Stack
 
@@ -163,7 +163,7 @@ We're looking for portfolios that demonstrate:
 
 ### Available Scripts
 
-\`\`\`bash
+```bash
 # Development server
 npm run dev
 
@@ -178,16 +178,16 @@ npm run lint
 
 # Type checking
 npm run type-check
-\`\`\`
+```
 
 ### Environment Variables
 
 Create a `.env.local` file in the root directory:
 
-\`\`\`env
+```env
 # Add any environment variables here
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-\`\`\`
+```
 
 ## 🌐 API Reference
 
@@ -201,14 +201,14 @@ Portfolio Ideas provides a public API for developers:
 
 ### Example Usage
 
-\`\`\`javascript
+```javascript
 // Fetch all portfolios
 const response = await fetch('/api/portfolios');
 const portfolios = await response.json();
 
 // Filter by technology
 const reactPortfolios = await fetch('/api/portfolios?tech=React');
-\`\`\`
+```
 
 ## 📊 Analytics & Performance
 
