@@ -638,7 +638,7 @@ export const mockPortfolios = [
     liveUrl: "https://www.raphaelchelly.com/",
     githubUrl: "https://github.com/raphaelchelly/raph_www",
     techStack: [	"Next.js", "TailwindCSS", "Vercel"],
-    description: ". A minimal and performant Next.js portfolio with TailwindCSS, hosted on Vercel.",
+    description: "A minimal and performant Next.js portfolio with TailwindCSS, hosted on Vercel.",
   },
   {
     id: 152,
