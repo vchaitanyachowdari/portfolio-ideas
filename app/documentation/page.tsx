@@ -333,17 +333,17 @@ function DocSection({
   return (
     <motion.section
       id={id}
-      className="mb-16 scroll-mt-24"
+      className="mb-16 scroll-mt-24 bg-gradient-to-r from-purple-900/40 to-slate-900/40 rounded-xl border border-purple-700/30 shadow-lg p-6 md:p-8"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center mb-6">
-        <div className="bg-purple-500/20 p-3 rounded-lg mr-4">{icon}</div>
-        <h2 className="text-3xl font-bold">{title}</h2>
+      <div className="flex items-center gap-3 mb-4">
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/20">{icon}</span>
+        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">{title}</h2>
       </div>
-      {children}
+      <div className="text-gray-200">{children}</div>
     </motion.section>
   )
 }

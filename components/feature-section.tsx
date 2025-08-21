@@ -55,7 +55,7 @@ export default function FeatureSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          className="text-center mb-16"
+          className="max-w-3xl mx-auto bg-gradient-to-r from-purple-900/40 to-slate-900/40 rounded-xl border border-purple-700/30 shadow-lg p-10 md:p-14 mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -95,7 +95,7 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: ["easeOut"],
       },
     },
   }

@@ -39,9 +39,13 @@ export default function PortfolioTable() {
 
   const itemsPerPage = 6
 
-  // Filter portfolios based on search term and selected techs
+  // Improved filter: search across author, description, and techStack
   const filteredPortfolios = mockPortfolios.filter((portfolio) => {
-    const matchesSearch = portfolio.author.toLowerCase().includes(searchTerm.toLowerCase())
+    const term = searchTerm.trim().toLowerCase()
+    const matchesSearch =
+      portfolio.author.toLowerCase().includes(term) ||
+      portfolio.description.toLowerCase().includes(term) ||
+      portfolio.techStack.some((tech) => tech.toLowerCase().includes(term))
 
     const matchesTech = selectedTechs.length === 0 || selectedTechs.some((tech) => portfolio.techStack.includes(tech))
 

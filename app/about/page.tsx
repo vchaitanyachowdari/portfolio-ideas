@@ -79,63 +79,37 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                About{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                  Portfolio Ideas
-                </span>
+                Meet the Team
               </h1>
               <p className="text-xl text-gray-300 mb-8">
-                We're on a mission to inspire developers and designers by showcasing the best portfolio websites from
-                around the world.
+                Our passionate team is dedicated to building a platform that inspires and connects developers and designers.
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* Our Story Section */}
-        <section className="py-16 relative">
+        {/* Team Section (single enhanced grid) */}
+        <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-3xl font-bold mb-6">Our Story</h2>
-                <div className="space-y-4 text-gray-300">
-                  <p>
-                    Portfolio Ideas began in 2020 when our founder, Alex, was struggling to find inspiration for his own
-                    portfolio website. After hours of searching, he realized there wasn't a centralized resource for
-                    developer portfolio inspiration.
-                  </p>
-                  <p>
-                    What started as a small collection of bookmarked sites quickly grew into a curated platform
-                    featuring over 130 outstanding portfolios from developers and designers worldwide.
-                  </p>
-                  <p>
-                    Today, Portfolio Ideas helps thousands of developers find inspiration, learn about different tech
-                    stacks, and discover new ways to showcase their work effectively.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="relative"
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
-                <div className="absolute -inset-4 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-xl"></div>
-                <div className="relative aspect-video rounded-xl overflow-hidden">
-                  <img
-                    src="/placeholder.svg?height=400&width=600"
-                    alt="Our team working together"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-3xl font-bold mb-4">
+                Meet Our{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">Team</span>
+              </h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                The passionate people behind Portfolio Ideas who work tirelessly to bring you the best portfolio inspiration.
+              </p>
+            </motion.div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {teamMembers.map((member, index) => (
+                <TeamMember key={index} member={member} index={index} />
+              ))}
             </div>
           </div>
         </section>
