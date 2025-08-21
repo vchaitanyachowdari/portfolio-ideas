@@ -46,7 +46,7 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Content with card divider */}
-  <motion.div className="container mx-auto px-4 relative z-10 text-center">
+      <motion.div className="container mx-auto px-4 relative z-10 text-center">
         <motion.div className="max-w-3xl mx-auto bg-gradient-to-r from-purple-900/40 to-slate-900/40 rounded-xl border border-purple-700/30 shadow-lg p-10 md:p-14 mb-8" style={{ y, opacity }}>
           <motion.h1
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
@@ -80,22 +80,23 @@ export default function HeroSection() {
               whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(168, 85, 247, 0.5)" }}
               whileTap={{ scale: 0.95 }}
             >
-            <Link
-              href="/portfolio-table"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium text-lg"
-            >
-              See Portfolios <ArrowRight size={18} />
-            </Link>
-          </motion.div>
+              <Link
+                href="/portfolio-table"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium text-lg"
+              >
+                See Portfolios <ArrowRight size={18} />
+              </Link>
+            </motion.div>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
-              href="https://github.com"
-              target="_blank"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium text-lg hover:bg-white/20 transition-colors"
-            >
-              <Github size={18} /> View on GitHub
-            </Link>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="https://github.com"
+                target="_blank"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium text-lg hover:bg-white/20 transition-colors"
+              >
+                <Github size={18} /> View on GitHub
+              </Link>
+            </motion.div>
           </motion.div>
         </motion.div>
         {/* Scroll Indicator */}
@@ -113,7 +114,7 @@ export default function HeroSection() {
             <div className="w-1.5 h-1.5 bg-white rounded-full" />
           </motion.div>
         </motion.div>
-  </motion.div>
-  </section>
-  )
+      </motion.div>
+    </section>
+  );
 }
