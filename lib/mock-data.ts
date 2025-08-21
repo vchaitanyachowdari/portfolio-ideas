@@ -673,7 +673,7 @@ export const mockPortfolios = [
     screenshot: "/id155.png",
     liveUrl: "https://www.abdellatif-laghjaj.ml/",
     githubUrl: "None",
-    techStack: [	"VueJS", "Lottilefiles", "Verel", "CSS"],
+    techStack: ["VueJS", "Lottilefiles", "Vercel", "CSS"],
     description: "A creative VueJS portfolio using CSS animations and Lottiefiles.",
   },
   {
