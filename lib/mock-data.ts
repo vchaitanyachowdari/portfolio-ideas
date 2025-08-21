@@ -114,7 +114,7 @@ export const mockPortfolios = [
     author: "Dejan Markovic",
     screenshot: "/id13.png",
     liveUrl: "https://www.dejan.works/",
-    githubUrl: "none",
+    githubUrl: "None",
     techStack: ["HTML", "CSS", "JavaScript", "Jquery"],
     description: "Classic portfolio using jQuery for interactive elements and smooth user experience.",
   },
