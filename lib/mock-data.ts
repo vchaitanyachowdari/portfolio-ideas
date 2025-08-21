@@ -16,7 +16,7 @@ export const mockPortfolios = [
     screenshot: "/id2.png",
     liveUrl: "https://kentcdodds.com/",
     githubUrl: "https://github.com/kentcdodds/kentcdodds.com",
-    techStack: ["React", "TypeScript", "Remix"," Prisma", "Redis", "Postgres", "CSS"],
+    techStack: ["React", "TypeScript", "Remix", "Prisma", "Redis", "Postgres", "CSS"],
     description: "Full-stack React portfolio with Remix, database integration, and modern web technologies.",
   },
   {
