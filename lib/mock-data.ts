@@ -1109,7 +1109,7 @@ export const mockPortfolios = [
     description: "Simple yet effective GitHub Pages portfolio showcasing frontend skills with Bootstrap and vanilla JavaScript.",
   },
   {
-    id:314 ,
+    id: 314,
     author: "Johnson Takashi",
     screenshot: "/id314.jpg",
     liveUrl: "https://johnson-takashi-blockchain.web.app/",
