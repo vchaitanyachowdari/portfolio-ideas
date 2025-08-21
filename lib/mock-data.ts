@@ -79,7 +79,7 @@ export const mockPortfolios = [
     screenshot: "/id9.png",
     liveUrl: "https://www.thvu.dev/",
     githubUrl: "https://github.com/ThangHuuVu/thvu-blog",
-    techStack: [	"React", "NextJS"," NodeJS", "TypeScript", "GraphQL", "Tailwindcss"],
+    techStack: ["React", "NextJS", "NodeJS", "TypeScript", "GraphQL", "Tailwindcss"],
     description: "Full-stack portfolio with GraphQL API, TypeScript, and modern development practices.",
   },
   {
