@@ -46,34 +46,34 @@ export default function FeatureSection() {
   }
 
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden">
+  <section className="py-24 md:py-36 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 right-0 w-96 h-96 rounded-full bg-purple-600/10 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-pink-600/10 blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+  <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          className="max-w-3xl mx-auto bg-gradient-to-r from-purple-900/40 to-slate-900/40 rounded-xl border border-purple-700/30 shadow-lg p-10 md:p-14 mb-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
+          className="max-w-3xl mx-auto bg-gradient-to-r from-purple-900/60 to-slate-900/60 rounded-3xl border border-purple-700/40 shadow-2xl p-12 md:p-20 mb-20 text-center"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
               Everything You Need
             </span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-2xl text-gray-300 max-w-2xl mx-auto font-light">
             Discover what makes our portfolio collection the ultimate resource for your inspiration
           </p>
         </motion.div>
 
         <motion.div
           ref={ref}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -103,19 +103,19 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -10, transition: { duration: 0.2 } }}
-      className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-colors"
+      whileHover={{ y: -12, scale: 1.04, boxShadow: "0 8px 32px 0 rgba(168,85,247,0.15)", borderColor: "#a855f7" }}
+      className="bg-white/5 backdrop-blur-lg rounded-3xl p-10 border border-white/10 hover:border-purple-400/40 transition-all duration-200 shadow-lg hover:shadow-2xl flex flex-col items-center text-center"
     >
       <motion.div
-        className={`w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        whileTap={{ scale: 0.9 }}
+        className={`w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6 shadow-lg`}
+        whileHover={{ scale: 1.12, rotate: 8 }}
+        whileTap={{ scale: 0.95 }}
       >
         {feature.icon}
       </motion.div>
 
-      <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
-      <p className="text-gray-300">{feature.description}</p>
+      <h3 className="text-2xl font-bold mb-3 text-white drop-shadow-lg">{feature.title}</h3>
+      <p className="text-gray-300 text-lg font-light leading-relaxed">{feature.description}</p>
     </motion.div>
   )
 }
