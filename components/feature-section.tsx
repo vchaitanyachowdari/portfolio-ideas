@@ -95,7 +95,7 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: ["easeOut"],
+        ease: "easeOut",
       },
     },
   }
