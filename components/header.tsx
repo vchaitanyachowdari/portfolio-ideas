@@ -7,6 +7,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -40,8 +41,13 @@ export default function Header() {
           </motion.div>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+  {/* Desktop Navigation */}
+  <nav className="hidden md:flex items-center space-x-6">
+          {/* Theme Toggle Button */}
+          <div className="flex items-center">
+            {/** Theme toggle button for dark/light mode */}
+            <ThemeToggle />
+          </div>
           <NavLink href="/">Home</NavLink>
           <NavLink href="/portfolio-table">Portfolios</NavLink>
           <NavLink href="/about">About</NavLink>
@@ -72,6 +78,8 @@ export default function Header() {
           </DropdownMenu>
 
           <NavLink href="/contact">Contact</NavLink>
+          {/* Theme Toggle Button */}
+          <ThemeToggle />
 
           <motion.a
             href="/portfolio-table"
