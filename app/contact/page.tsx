@@ -1,10 +1,9 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle, Loader2 } from "lucide-react"
-import emailjs from "@emailjs/browser"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Input } from "@/components/ui/input"
@@ -12,11 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-
-// EmailJS configuration - Replace with your actual values
-const EMAILJS_SERVICE_ID = "your_service_id"
-const EMAILJS_TEMPLATE_ID = "your_template_id"
-const EMAILJS_PUBLIC_KEY = "your_public_key"
+import { sendContactEmail, checkEmailConfiguration } from "@/app/actions/contact"
 
 interface FormData {
   name: string
@@ -33,7 +28,6 @@ interface FormErrors {
 }
 
 export default function ContactPage() {
-  const formRef = useRef<HTMLFormElement>(null)
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -44,9 +38,24 @@ export default function ContactPage() {
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
   const [submitMessage, setSubmitMessage] = useState("")
+  const [isEmailConfigured, setIsEmailConfigured] = useState<boolean | null>(null)
 
   // Email validation regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  // Check email configuration on component mount
+  useEffect(() => {
+    const checkConfig = async () => {
+      try {
+        const configured = await checkEmailConfiguration()
+        setIsEmailConfigured(configured)
+      } catch (error) {
+        console.error("Error checking email configuration:", error)
+        setIsEmailConfigured(false)
+      }
+    }
+    checkConfig()
+  }, [])
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {}
@@ -120,28 +129,27 @@ export default function ContactPage() {
       return
     }
 
+    // Check if EmailJS is configured
+    if (!isEmailConfigured) {
+      setFormStatus("error")
+      setSubmitMessage("Email service is not configured. Please check the setup instructions.")
+      setTimeout(() => {
+        setFormStatus("idle")
+        setSubmitMessage("")
+      }, 5000)
+      return
+    }
+
     setFormStatus("submitting")
     setSubmitMessage("")
 
     try {
-      // Initialize EmailJS (you only need to do this once in your app)
-      emailjs.init(EMAILJS_PUBLIC_KEY)
+      // Send email using server action
+      const result = await sendContactEmail(formData)
 
-      // Prepare template parameters
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_email: "your-email@example.com", // Replace with your email
-      }
-
-      // Send email using EmailJS
-      const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-
-      if (response.status === 200) {
+      if (result.success) {
         setFormStatus("success")
-        setSubmitMessage("Thank you for your message! We'll get back to you soon.")
+        setSubmitMessage(result.message)
 
         // Reset form
         setFormData({
@@ -157,12 +165,19 @@ export default function ContactPage() {
           setSubmitMessage("")
         }, 5000)
       } else {
-        throw new Error("Failed to send email")
+        setFormStatus("error")
+        setSubmitMessage(result.message)
+
+        // Reset error status after 5 seconds
+        setTimeout(() => {
+          setFormStatus("idle")
+          setSubmitMessage("")
+        }, 5000)
       }
     } catch (error) {
-      console.error("EmailJS Error:", error)
+      console.error("Contact form error:", error)
       setFormStatus("error")
-      setSubmitMessage("Sorry, there was an error sending your message. Please try again or contact us directly.")
+      setSubmitMessage("An unexpected error occurred. Please try again.")
 
       // Reset error status after 5 seconds
       setTimeout(() => {
@@ -263,29 +278,40 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Setup Instructions */}
-                <div className="mt-12 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-                  <h3 className="text-lg font-semibold mb-3 text-yellow-400">📧 EmailJS Setup Required</h3>
-                  <div className="text-sm text-gray-300 space-y-2">
-                    <p>To enable email functionality, please:</p>
-                    <ol className="list-decimal list-inside space-y-1 ml-4">
-                      <li>
-                        Create an account at{" "}
-                        <a
-                          href="https://emailjs.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-400 hover:underline"
-                        >
-                          emailjs.com
-                        </a>
-                      </li>
-                      <li>Set up an email service (Gmail, Outlook, etc.)</li>
-                      <li>Create an email template</li>
-                      <li>Replace the configuration values in the code</li>
-                    </ol>
+                {/* Configuration Status */}
+                {isEmailConfigured === false && (
+                  <div className="mt-12 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                    <h3 className="text-lg font-semibold mb-3 text-yellow-400">📧 EmailJS Setup Required</h3>
+                    <div className="text-sm text-gray-300 space-y-2">
+                      <p>To enable email functionality, please:</p>
+                      <ol className="list-decimal list-inside space-y-1 ml-4">
+                        <li>
+                          Create an account at{" "}
+                          <a
+                            href="https://emailjs.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-purple-400 hover:underline"
+                          >
+                            emailjs.com
+                          </a>
+                        </li>
+                        <li>Set up an email service (Gmail, Outlook, etc.)</li>
+                        <li>Create an email template</li>
+                        <li>Update the values in your .env.local file</li>
+                      </ol>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {isEmailConfigured === true && (
+                  <div className="mt-12 p-6 bg-green-500/10 border border-green-500/20 rounded-xl">
+                    <h3 className="text-lg font-semibold mb-3 text-green-400">✅ EmailJS Configured</h3>
+                    <p className="text-sm text-gray-300">
+                      Email service is properly configured and ready to receive messages.
+                    </p>
+                  </div>
+                )}
               </motion.div>
 
               {/* Contact Form */}
@@ -314,7 +340,7 @@ export default function ContactPage() {
                   </Alert>
                 )}
 
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Name Field */}
                     <div className="space-y-2">
@@ -435,12 +461,17 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={formStatus === "submitting"}
+                    disabled={formStatus === "submitting" || isEmailConfigured === false}
                   >
                     {formStatus === "submitting" ? (
                       <span className="flex items-center justify-center">
                         <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5" />
                         Sending Message...
+                      </span>
+                    ) : isEmailConfigured === false ? (
+                      <span className="flex items-center justify-center">
+                        <AlertCircle className="mr-2 h-4 w-4" />
+                        Email Service Not Configured
                       </span>
                     ) : (
                       <span className="flex items-center justify-center">

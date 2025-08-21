@@ -33,8 +33,8 @@ export default function CtaSection() {
         />
       </div>
 
-      <motion.div className="container mx-auto px-4 relative z-10" style={{ scale, opacity }}>
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/10 shadow-[0_0_50px_rgba(168,85,247,0.15)]">
+      <motion.div className="container mx-auto px-4 relative z-10">
+  <motion.div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-900/40 to-pink-900/40 rounded-3xl border border-purple-700/30 shadow-lg p-10 md:p-14 mb-8" style={{ scale, opacity }}>
           <div className="text-center">
             <motion.h2
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
@@ -77,7 +77,7 @@ export default function CtaSection() {
               </Link>
             </motion.div>
           </div>
-        </div>
+  </motion.div>
       </motion.div>
     </section>
   )

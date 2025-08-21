@@ -196,9 +196,14 @@ export default function TermsOfServicePage() {
 
 function TermsSection({ title, content }: { title: string; content: string }) {
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <div className="text-gray-300 space-y-4" dangerouslySetInnerHTML={{ __html: content }} />
+    <div className="bg-gradient-to-r from-purple-900/40 to-slate-900/40 rounded-xl border border-purple-700/30 shadow-lg p-6 md:p-8 mb-8">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/20">
+          <FileText className="h-6 w-6 text-purple-400" />
+        </span>
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">{title}</h2>
+      </div>
+      <div className="text-gray-200 space-y-4 text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   )
 }
