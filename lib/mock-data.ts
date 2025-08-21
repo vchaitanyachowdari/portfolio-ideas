@@ -1114,7 +1114,7 @@ export const mockPortfolios = [
     screenshot: "/id314.jpg",
     liveUrl: "https://johnson-takashi-blockchain.web.app/",
     githubUrl: "https://github.com/John-T45/John-T45.github.io",
-    techStack: ["HTML", "CSS", "Bootstrap", "and JavaScript"],
+    techStack: ["HTML", "CSS", "Bootstrap", "JavaScript"],
     description: "Blockchain-focused portfolio with modern web technologies, featuring responsive design and interactive elements.",
   },
   {
